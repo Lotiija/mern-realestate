@@ -13,10 +13,10 @@ const App = () => {
       <Header />
       <Routes>
         <Route exact path="/" element={<Home />} ></Route>
-        <Route  path="/" element={<About />} ></Route>
-        <Route  path="/" element={<Profile />} ></Route>
-        <Route  path="/" element={<SignIn />} ></Route>
-        <Route  path="/" element={<SignUp />} ></Route>
+        <Route  path="/about" element={<About />} ></Route>
+        <Route  path="/profile" element={<Profile />} ></Route>
+        <Route  path="/sign-in" element={<SignIn />} ></Route>
+        <Route  path="/sign-up" element={<SignUp />} ></Route>
       </Routes>
     </BrowserRouter>
   )
