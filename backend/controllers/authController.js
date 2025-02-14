@@ -1,17 +1,17 @@
 import User from "../models/userModel.js";
-import bcrypt from 'bcryptjs';
-import { errorHandler } from '../utils/error.js';
-import jwt from 'jsonwebtoken';
+import bcrypt from "bcryptjs";
+import { errorHandler } from "../utils/error.js";
+import jwt from "jsonwebtoken";
 
 export const signup = async (req, res, next) => {
   const { username, email, password } = req.body;
   const salt = await bcrypt.genSalt(10); // Generate a salt
   const hashedPassword = await bcrypt.hash(password, salt);
   // const hashedPassword = bcrypt.hashSync(password, 10);
-  const newUser = new User({ username, email, password: hashedPassword })
+  const newUser = new User({ username, email, password: hashedPassword });
   try {
     await newUser.save();
-    res.status(201).json('User created successfully!');
+    res.status(201).json("User created successfully!");
   } catch (error) {
     next(error);
   }
@@ -21,16 +21,16 @@ export const signin = async (req, res, next) => {
   const { email, password } = req.body;
   try {
     const validUser = await User.findOne({ email });
-    if (!validUser) return next(errorHandler(404, 'User not found!'));
+    if (!validUser) return next(errorHandler(404, "User not found!"));
     const validPassword = bcrypt.compareSync(password, validUser.password);
-    if (!validPassword) return next(errorHandler(404, 'Wrong credentials'));
-    const token = jwt.sign({ id: validUser._id}, process.env.JWT_SECRET);
-    const { password: pass, ...rest } = validUser._doc;
+    if (!validPassword) return next(errorHandler(404, "Wrong credentials"));
+    const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET);
+    const { password: pass, ...rest } = validUser._doc; // removes the password from the response being returned
     res
-      .cookie('access_token', token, { httpOnly: true})
+      .cookie("access_token", token, { httpOnly: true })
       .status(200)
       .json(rest);
   } catch (error) {
-    next(error)
+    next(error);
   }
 };
